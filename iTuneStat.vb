@@ -4,17 +4,18 @@ Imports System.Text
 Imports Microsoft.VisualBasic
 
 Public Class Form1
-    Const VERSION As String = "1.03"
+    Const VERSION As String = "2.01"
     Const C_OUTFILE As String = "itune.htm"
     Const C_ERRLOG As String = "errlog.txt"
     Const C_ITUNELOG As String = "itune.log"
-    Const C_BROWSER As String = "D:\ols\Sleipnir\bin\Sleipnir.exe"
+    Const C_BROWSER As String = "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
     'Const C_BROWSER As String = "D:\oracle\ols\sleipnir\Sleipnir.exe"
     Const EDITOR As String = "D:\ols\hide\Hidemaru.exe"
     Private Structure music_type
         Dim name, artist, player As String
         Dim t_id, size, time, pcount, rate As Integer
         Dim m_date, a_date, p_date As Date
+
     End Structure
 
     Dim total_cnt As Integer   ' 全曲数
@@ -94,12 +95,21 @@ Public Class Form1
                             r = reader.ReadElementString("integer")
                             If r = 100 Then
                                 mdata.rate = 1
+                                'rate_cnt = rate_cnt + 1
+                                'rate_time = rate_time + mdata.time
+                            End If
+                        Case "Rating Computed"
+                            ' このkeyがある場合は自動的につけられたrateなので無視する
+                            If mdata.rate = 1 Then
+                                mdata.rate = 0
+                            End If
+                        Case "Location"
+                            's = mdata.t_id & mdata.artist & mdata.name & mdata.player
+                            '                            writer.WriteLine("*******************")
+                            If mdata.rate = 1 Then
                                 rate_cnt = rate_cnt + 1
                                 rate_time = rate_time + mdata.time
                             End If
-                        Case "Location"
-                            s = mdata.t_id & mdata.artist & mdata.name & mdata.player
-                            '                            writer.WriteLine("*******************")
                             total_cnt = total_cnt + 1
                             If composer.ContainsKey(mdata.artist) Then
                                 composer(mdata.artist) = composer(mdata.artist) + 1
